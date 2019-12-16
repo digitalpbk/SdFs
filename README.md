@@ -1,3 +1,11 @@
+Updates:
+* Added Write CSD function to modify the CSD register. 
+Warning: Incorrect parameters can render your SD card useless. 
+Use after reading the SD spec.
+
+
+Original README:
+
 ### Warning: This is an early beta version of the SdFs library.
 
 The SdFs library is in early development and features may change. 
