@@ -55,6 +55,7 @@
   SD_CARD_ERROR(CMD18, "Read multiple blocks")\
   SD_CARD_ERROR(CMD24, "Write single block")\
   SD_CARD_ERROR(CMD25, "Write multiple blocks")\
+  SD_CARD_ERROR(CMD27, "Error writing CSD")\
   SD_CARD_ERROR(CMD32, "Set first erase block")\
   SD_CARD_ERROR(CMD33, "Set last erase block")\
   SD_CARD_ERROR(CMD38, "Erase selected blocks")\
@@ -80,7 +81,8 @@
   SD_CARD_ERROR(ERASE_TIMEOUT, "Erase command timeout")\
   SD_CARD_ERROR(INIT_NOT_CALLED, "Card has not been initialized")\
   SD_CARD_ERROR(INVALID_CARD_CONFIG, "Invalid card config")\
-  SD_CARD_ERROR(FUNCTION_NOT_SUPPORTED, "Unsupported SDIO command")
+  SD_CARD_ERROR(FUNCTION_NOT_SUPPORTED, "Unsupported SDIO command")\
+  SD_CARD_ERROR(WRITE_REG, "Write CSD failed.")\
 
 
 enum {
@@ -140,6 +142,8 @@ const uint8_t CMD18 = 0X12;
 const uint8_t CMD24 = 0X18;
 /** WRITE_MULTIPLE_SECTOR - write sectors of data until a STOP_TRANSMISSION */
 const uint8_t CMD25 = 0X19;
+/** WRITE CSD **/
+const uint8_t CMD27 = 0X1B;
 /** ERASE_WR_BLK_START - sets the address of the first sector to be erased */
 const uint8_t CMD32 = 0X20;
 /** ERASE_WR_BLK_END - sets the address of the last sector of the continuous

@@ -280,6 +280,10 @@ class SdSpiCard {
   /** Set CS high and deactivate the card. */
   void spiStop();
 
+  bool writeCSD(csd_t* csd) {
+    return writeRegister((uint8_t*)csd);
+  }
+
  private:
   // private functions
   uint8_t cardAcmd(uint8_t cmd, uint32_t arg) {
@@ -290,7 +294,8 @@ class SdSpiCard {
   bool isTimedOut(uint16_t startMS, uint16_t timeoutMS);
   bool readData(uint8_t* dst, size_t count);
   bool readRegister(uint8_t cmd, void* buf);
-
+  bool writeRegister(const uint8_t* src);
+  
   void type(uint8_t value) {
     m_type = value;
   }

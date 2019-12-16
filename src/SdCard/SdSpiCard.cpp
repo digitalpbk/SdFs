@@ -436,6 +436,60 @@ fail:
   return false;
 }
 //------------------------------------------------------------------------------
+/** write CSD register */
+bool SdSpiCard::writeRegister(const uint8_t* src) {
+  if (cardCommand(CMD27, 0)) {
+    error(SD_CARD_ERROR_WRITE_REG);
+    goto fail;
+  }
+
+  syncDevice();
+  spiSend(DATA_START_SECTOR);
+
+  uint8_t crc, resp;
+  uint8_t bit, word;
+  uint16_t i , j;
+
+  crc = 0;
+
+  for (i = 0; i < 15; i++) {
+    word = src[i];
+    for (j = 0; j < 8; j++) {
+      bit = ((word&0x80)>0);
+      bit ^= (crc>>6);
+      if (bit) {
+          crc ^= 0x4;
+      }
+      crc <<= 1;
+      crc &= 0x7F;
+      crc |= bit;
+      word <<= 1;
+    }
+  }
+
+  crc = (crc<<1)|1;
+  // transfer data
+  for (i = 0; i < 15; i++) spiSend(src[i]);
+  spiSend(crc);  // send crc byte
+  
+  if (!waitNotBusy(SD_WRITE_TIMEOUT)) {
+    error(SD_CARD_ERROR_WRITE_TIMEOUT);
+    goto fail;
+  }
+
+  if(cardCommand(CMD13, 0)) {
+    error(SD_CARD_ERROR_CMD27);
+    goto fail;
+  }
+  
+  spiStop();
+  return true;
+
+ fail:
+  spiStop();
+  return false;
+}
+//------------------------------------------------------------------------------
 bool SdSpiCard::readStart(uint32_t sector) {
   SD_TRACE("RS", sector);
   if (type() != SD_CARD_TYPE_SDHC) {
